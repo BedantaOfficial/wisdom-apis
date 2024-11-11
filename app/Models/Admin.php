@@ -9,7 +9,7 @@ class Admin extends Model
 {
     use HasFactory;
 
-    protected $table = 'admin';
+    protected $table = 'Admin';
 
     private static $secret = 'bT7!dFs9Zp@kL%2wXy&CvGhQjN3r$BmP';
 
