@@ -53,11 +53,8 @@ class Admin extends Model
             return false; // Payload is missing username or password
         }
 
-        // Verify the username and password with the database
-        $admin = self::where('username', $payload['username'])
-            ->where('password', $payload['password']) // Store passwords securely with hashing in production
-            ->first();
 
-        return $admin ? $payload : false;
+
+        return $payload;
     }
 }
