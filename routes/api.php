@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Route;
 
 // Route for getting the token
 Route::post('/auth/token', [AdminController::class, 'getToken']);
+/*
+    **** Use This For Getting The Token
+    **** Send POST request to this endpoint
+    **** Body should contain username and password
+    **** username admin 
+    **** password 12345
+
+*/
 
 Route::prefix('v1')->middleware('tokencheck')->group(function () {
     // Simple Hello World route
