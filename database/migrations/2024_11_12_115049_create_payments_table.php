@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_records', function (Blueprint $table) {
-            $table->unsignedInteger('record_id')->autoIncrement();
+            $table->unsignedInteger('record_id');
             $table->unsignedInteger("user_id");
+            $table->primary(['record_id', 'user_id']);
             $table->foreign("user_id")
                 ->references("id")
                 ->on("student_admissions")

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,10 +18,6 @@ Route::post('/auth/token', [AdminController::class, 'getToken']);
 */
 
 Route::prefix('v1')->middleware('tokencheck')->group(function () {
-    // Simple Hello World route
-    Route::get('/', function () {
-        return response()->json("Hello, World");
-    });
 
     // Students route
     Route::prefix('students')->group(function () {
@@ -37,6 +34,13 @@ Route::prefix('v1')->middleware('tokencheck')->group(function () {
         Route::get('/range', [AttendanceController::class, 'getAttendanceDateRange']);
         Route::post('/', [AttendanceController::class, 'store']);
         Route::get('/', [AttendanceController::class, 'index']);
+    });
+
+
+    // Paymetns routes
+    Route::prefix('payments')->group(function () {
+        Route::get('/all', [PaymentController::class, 'getAllPaymentsOfStudent']);
+        Route::get('/', [PaymentController::class, 'index']);
     });
 
 
