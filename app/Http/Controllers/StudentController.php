@@ -19,35 +19,38 @@ class StudentController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
-     * Display the specified resource.
+     * Return the date range of a student
+     * start: course start date
+     * end: course end date
      */
-    public function show(Student $student)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Student $student)
+    public function getCourseRange(Request $request)
     {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Student $student)
-    {
-        //
+        $request->validate([
+            'student_id' => 'required|exists:student_admissions,id',
+        ]);
+
+
+        $student_id = $request->student_id;
+        $student = Student::find($student_id);
+
+        if (!$student) {
+            return response()->json(['message' => 'Student not found'], 404);
+        }
+
+
+        $start_date = $student->date_of_admission;
+        $duration = preg_replace('/[^0-9]/', '', $student->duration);
+        $end_date = date('Y-m-d', strtotime($start_date . ' + ' . $duration . ' months'));
+
+        return response()->json([
+            'message' => 'Course range for the student',
+            'student' => $student,
+            'start' => $start_date,
+            'end' => $end_date
+        ]);
     }
 }

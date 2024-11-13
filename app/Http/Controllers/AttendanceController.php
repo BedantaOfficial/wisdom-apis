@@ -137,19 +137,30 @@ class AttendanceController extends Controller
 
 
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Attendance $attendance)
+    public function getAllAttendance(Request $request)
     {
-        //
-    }
+        try {
+            // Validate the incoming request
+            $request->validate([
+                'student_id' => 'required|exists:student_admissions,id', // Ensure student exists in student_admissions table
+            ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Attendance $attendance)
-    {
-        //
+            // Get the student ID from the request
+            $student_id = $request->student_id;
+
+            // Get the attendance date range for the student
+            $attendances = Attendance::where('student_id', $student_id)->get("date");
+
+            return response()->json([
+                'message' => 'Attendances fetched successfully',
+                'attendances' => $attendances
+            ]);
+        } catch (\Exception $e) {
+            // If any exception occurs, return an error response
+            return response()->json([
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(),
+            ], 500); // HTTP status code 500 for internal server error
+        }
     }
 }

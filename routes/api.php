@@ -14,7 +14,6 @@ Route::post('/auth/token', [AdminController::class, 'getToken']);
     **** Body should contain username and password
     **** username admin 
     **** password 12345
-
 */
 
 Route::prefix('v1')->middleware('tokencheck')->group(function () {
@@ -24,17 +23,19 @@ Route::prefix('v1')->middleware('tokencheck')->group(function () {
     });
 
     // Students route
-    Route::get('students', [StudentController::class, 'index']);
+    Route::prefix('students')->group(function () {
+        Route::get('/course-range', [StudentController::class, 'getCourseRange']);
+        Route::get('/', [StudentController::class, 'index']);
+    });
+
 
 
 
     // Attendance routes
     Route::prefix('attendance')->group(function () {
-        // Fetch date range for a specific student by year and month (GET request)
+        Route::get('/all', [AttendanceController::class, 'getAllAttendance']);
         Route::get('/range', [AttendanceController::class, 'getAttendanceDateRange']);
-        // Store attendance (POST request to store attendance for a student on a specific date)
         Route::post('/', [AttendanceController::class, 'store']);
-        // Fetch attendance report for a specific student by year and month (GET request)
         Route::get('/', [AttendanceController::class, 'index']);
     });
 
