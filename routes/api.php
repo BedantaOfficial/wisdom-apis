@@ -46,5 +46,8 @@ Route::prefix('v1')->middleware('tokencheck')->group(function () {
 
 
     // Certificates route
-    Route::get('certificates', [CertificateController::class, 'index']);
+    Route::prefix('certificates')->group(function () {
+        Route::get('/', [CertificateController::class, 'index']);
+        Route::post('/', [CertificateController::class, 'store']);
+    });
 });

@@ -9,4 +9,8 @@ class Payment extends Model
 {
     use HasFactory;
     protected $table = "user_records";
+    public function student()
+    {
+        return $this->belongsTo(Student::class, "user_id", "id");
+    }
 }

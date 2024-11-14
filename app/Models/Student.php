@@ -18,4 +18,9 @@ class Student extends Model
     {
         return $this->hasMany(Certificate::class, 'student_id', 'id');
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'user_id', 'id');
+    }
 }
