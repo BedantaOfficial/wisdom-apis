@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
@@ -49,5 +50,13 @@ Route::prefix('v1')->middleware('tokencheck')->group(function () {
     Route::prefix('certificates')->group(function () {
         Route::get('/', [CertificateController::class, 'index']);
         Route::post('/', [CertificateController::class, 'store']);
+    });
+
+
+    // Expense route
+    Route::prefix('expenses')->group(function () {
+        Route::get('/', [ExpenseController::class, 'index']);
+        Route::post('/', [ExpenseController::class, 'store']);
+        Route::delete('/', [ExpenseController::class, 'delete']);
     });
 });
