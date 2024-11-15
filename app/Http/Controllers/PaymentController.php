@@ -27,12 +27,13 @@ class PaymentController extends Controller
         // Write the raw SQL query
         $query = DB::select("
             SELECT *
-            FROM user_records AS ur
+            FROM user_records AS ur join student_admissions stu
+            ON ur.user_id = stu.id
             WHERE (ur.record_id, ur.user_id) IN (
                 SELECT MAX(record_id) AS record_id, user_id
                 FROM user_records
                 WHERE status = 'paid'
-                AND due_date BETWEEN ? AND ?
+                AND updated_at BETWEEN ? AND ?
                 GROUP BY user_id
             )
         ", [$start_date, $end_date]);

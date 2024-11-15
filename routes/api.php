@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 
 // Route for getting the token
 Route::post('/auth/token', [AdminController::class, 'getToken']);
+Route::get('/pubilc/certificates', [ExpenseController::class, 'index']);
+
 /*
     **** Use This For Getting The Token
     **** Send POST request to this endpoint
@@ -55,7 +57,6 @@ Route::prefix('v1')->middleware('tokencheck')->group(function () {
 
     // Expense route
     Route::prefix('expenses')->group(function () {
-        Route::get('/', [ExpenseController::class, 'index']);
         Route::post('/', [ExpenseController::class, 'store']);
         Route::delete('/', [ExpenseController::class, 'delete']);
     });
