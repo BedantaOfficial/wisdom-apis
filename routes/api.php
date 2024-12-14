@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
@@ -59,5 +61,17 @@ Route::prefix('v1')->middleware('tokencheck')->group(function () {
     Route::prefix('expenses')->group(function () {
         Route::post('/', [ExpenseController::class, 'store']);
         Route::delete('/', [ExpenseController::class, 'delete']);
+    });
+
+    // Course route
+    Route::prefix('courses')->group(function () {
+        Route::get('/', [CourseController::class, 'index']);
+    });
+
+    // Exam route
+    Route::prefix('exams')->group(function () {
+        Route::get('/{date}', [ExaminationController::class, 'getExamination']);
+        Route::get('/', [ExaminationController::class, 'index']);
+        Route::post('/', [ExaminationController::class, 'create']);
     });
 });

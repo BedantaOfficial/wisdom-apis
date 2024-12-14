@@ -23,4 +23,9 @@ class Student extends Model
     {
         return $this->hasMany(Payment::class, 'user_id', 'id');
     }
+
+    public function examinations()
+    {
+        return $this->hasMany(ExaminationStudent::class, 'student_id', 'id');
+    }
 }
