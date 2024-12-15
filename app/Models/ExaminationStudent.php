@@ -11,6 +11,8 @@ class ExaminationStudent extends Model
     protected $fillable = [
         'examination_id',
         'student_id',
+        'answer_file_url',
+        'started_at',
         'created_at',
         'updated_at'
     ];

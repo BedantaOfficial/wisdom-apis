@@ -5,6 +5,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ExaminationController;
+use App\Http\Controllers\ExaminationStudentController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
@@ -13,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 // Route for getting the token
 Route::post('/auth/token', [AdminController::class, 'getToken']);
 Route::get('/pubilc/certificates', [ExpenseController::class, 'index']);
+Route::post('/auth/examlogin', [ExaminationController::class, 'login']);
+// ExamStudent routes
+Route::prefix('exam-students')->group(function () {
+    Route::get('/all', [ExaminationStudentController::class, 'all']);
+    Route::get('/', [ExaminationStudentController::class, 'index']);
+    Route::post('/startexam', [ExaminationStudentController::class, 'startExam']);
+    Route::post('/{id}/upload-pdf', [ExaminationStudentController::class, 'uploadAnswerFile']); // Add this line
+    Route::post('/{id}/submit', [ExaminationStudentController::class, 'submitAnswer']); // Add this line
+});
 
 /*
     **** Use This For Getting The Token

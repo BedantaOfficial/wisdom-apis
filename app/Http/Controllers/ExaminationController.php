@@ -7,6 +7,7 @@ use App\Models\ExaminationStudent;
 use App\Models\Option;
 use App\Models\Question;
 use App\Models\QuestionDetail;
+use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -234,6 +235,65 @@ class ExaminationController extends Controller
             return response()->json([
                 'message' => 'An error occurred.',
                 'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function login(Request $request)
+    {
+        try {
+            // Validate the incoming request
+            $request->validate([
+                'email' => 'required|email|exists:student_admissions,email',
+                'dateOfAdmission' => 'required|date|exists:student_admissions,date_of_admission',
+                'name' => 'required|string|exists:student_admissions,name',
+                'examDate' => 'required|date|exists:examinations,exam_date',
+            ]);
+
+            // Fetch the student using the provided credentials
+            $student = Student::where('email', $request->email)
+                ->where('date_of_admission', $request->dateOfAdmission)
+                ->where('name', $request->name)
+                ->first();
+
+            if (!$student) {
+                return response()->json([
+                    'message' => 'Login failed. Please ensure your email, name, and date of admission match the details you provided during registration.',
+                    'suggestion' => 'If you forgot your details, contact the administration office for assistance.',
+                ], 401);
+            }
+
+            // Fetch the examination where the student is registered
+            $examination = Examination::whereDate('exam_date', $request->examDate)
+                ->whereHas('students', function ($query) use ($student) {
+                    $query->where('student_id', $student->id);
+                })
+                ->with(['theoryQuestion.questionDetails', 'practicalQuestion.questionDetails', 'mcqQuestion.questionDetails.options'])
+                ->first();
+
+            if (!$examination) {
+                return response()->json([
+                    'message' => 'No examination record found for the provided date.',
+                    'suggestion' => 'Please verify the examination date with your timetable or contact your instructor for confirmation.',
+                ], 404);
+            }
+
+            // Return only the examination details
+            return response()->json([
+                'examination' => $examination,
+                'student' => $student
+            ]);
+        } catch (ValidationException $e) {
+            // Handle validation errors
+            return response()->json([
+                'message' => 'Validation failed. Please check your input.',
+                'errors' => $e->errors(), // Provide detailed validation errors
+            ], 422);
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            return response()->json([
+                'message' => 'An unexpected error occurred. Please try again later.',
+                'error' => $e->getMessage(), // Include error details in development mode (optional)
             ], 500);
         }
     }
