@@ -16,6 +16,14 @@ class CourseController extends Controller
             // Fetch all courses with their related papers
             $courses = Course::with('papers')->get();
 
+            // Convert to array and modify the course data to send 'name' instead of 'course_name'
+            $courses = $courses->map(function ($course) {
+                $courseArray = $course->toArray(); // Convert model to array
+                $courseArray['name'] = $courseArray['course_name']; // Rename field
+                unset($courseArray['course_name']); // Optionally remove course_name field
+                return $courseArray;
+            });
+
             // Return success response with courses and their papers
             return response()->json([
                 'success' => true,
